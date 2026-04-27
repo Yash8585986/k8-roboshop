@@ -4,9 +4,9 @@ metadata:
   name: catalogue
   namespace: roboshop
   labels:
-  project: catalogue
-  tier: backend
-  component: catalogue
+    project: catalogue
+    tier: backend
+    component: catalogue
 data:
   MONGO: true
   MONGO_URLL: "mongodb://mongodb:27017/catalogue"
