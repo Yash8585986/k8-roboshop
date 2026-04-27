@@ -47,3 +47,14 @@ spec:
   - protocol: TCP
     port: 27017 # servie port
     targetPort: 27017 # container port
+
+---
+
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+  name: roboshop
+  labels:
+    project: roboshop
+    tier: db
+    component: mongodb
