@@ -28,7 +28,7 @@ spec:
         - containerPort: 27017
 
 ---
-apiVErsion: v1
+apiVersion: v1
 kind: service
 metadata:
   name: mongodb
