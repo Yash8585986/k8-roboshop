@@ -40,6 +40,27 @@ spec:
       containers:
       - name: catalogue
         image: joindevops/catalogue:1.0.0
+        # Readiness: Don't send traffic until the port is open
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "150m"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        failureThreshold: 5
+    # Liveness: Restart if the port becomes unresponsive
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+            periodSeconds: 20
+          failureThreshold: 5
         envFrom:
         - configMapRef:
             name: catalogue
