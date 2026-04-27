@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: database
+    component: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: database
+      component: mongodb
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: database
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: yash8575/mongodb # It's best practice to use specific versions, not :latest
+        ports:
+        - containerPort: 27017
+
+---
+apiVErsion: v1
+kind: service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+  project: roboshop
+  tier: database
+  component: mongodb
+spec:
+  selector:
+    project: roboshop
+    tier: database
+    component: mongodb
+  ports:
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+
