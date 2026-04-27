@@ -51,9 +51,9 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 8080
-        initialDelaySeconds: 5
-        periodSeconds: 10
-        failureThreshold: 5
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 5
     # Liveness: Restart if the port becomes unresponsive
         livenessProbe:
           httpGet:
