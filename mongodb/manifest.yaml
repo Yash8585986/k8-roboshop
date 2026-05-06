@@ -1,22 +1,41 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: mongodb
+  name: mongodb-headless
   namespace: roboshop
-  # these labels are replicaset labels
   labels:
     project: roboshop
     tier: db
     component: mongodb
 spec:
-  replicas: 1
   selector:
-    # using these labels replica set selects the pod
+    # labels are used as selectors
+    project: roboshop
+    tier: db
+    component: mongodb
+  ports:
+  - protocol: TCP
+    port: 27017 # servie port
+    targetPort: 27017 # container port
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: db
+    component: mongodb
+spec:
+  selector:
     matchLabels:
       project: roboshop
       tier: db
       component: mongodb
-  # This is pod definition, pod is subset of replicaset
+  serviceName: "mongodb-headless"
+  replicas: 3 # by default is 1
+# pod definition
   template:
     metadata:
       labels:
@@ -26,8 +45,23 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: joindevops/mongodb:1.0.0
-        imagePullPolicy: Always
+        image: yash8575/mongodb:1.0.0
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        volumeMounts:
+        - name: mongodb-pvc
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-pvc
+      namespace: roboshop
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "roboshop-sc"
+      resources:
+        requests:
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
